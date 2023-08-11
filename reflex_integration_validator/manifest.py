@@ -1,6 +1,7 @@
 """ Defines a Pydantic model for validating Integration
 manifests against a standard schema."""
 
+import re
 from enum import Enum
 from typing import Optional, Union, List, Dict, Literal
 from pydantic import BaseModel, Field
@@ -27,8 +28,15 @@ class ValidTriggers(str, Enum):
     SCHEDULE = 'schedule'
     EVENT_RULE = 'event_rule'
 
+# A normal UUID4 regex
 UUID4_REGEX = r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}'
-VALID_CONFIG_FIELD_TYPES = ['int', 'str', 'str-select', 'bool']
+
+# Authors should be their name and email address like Name <email@address.com>
+AUTHOR_REGEX = r'^[a-zA-Z0-9 ]+<[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}>$'
+
+# Base64 encoded image regex
+BASE64_IMAGE_REGEX = r'^data:image\/(png|jpg|jpeg|gif);base64,[a-zA-Z0-9+/]+={0,2}$'
+
 
 class ParameterField(BaseModel):
 
@@ -73,15 +81,15 @@ class Integration(BaseModel):
     brief_description: str = Field(..., description="Brief description of the integration", max_length=100)
     description: str = Field(..., description="Description of the integration")
     version: str = Field(..., description="Version of the integration", pattern=r'^\d+\.\d+\.\d+$')
-    author: str = Field(..., description="Author of the integration")
+    author: str = Field(..., description="Author of the integration", pattern=AUTHOR_REGEX)
     integration_url: Optional[str] = Field(None, description="URL of the integration")
-    contributor: List[str] = Field([], description="Contributors to the integration")
+    contributor: List[str] = Field([], description="Contributors to the integration", validator=lambda v: all(re.match(AUTHOR_REGEX, i) for i in v))
     tags: List[str] = Field([], description="Tags for the integration")
     categories: List[str] = Field([], description="Categories for the integration")
     enabled: bool = Field(True, description="Whether the integration is enabled")
     license: Optional[str] = Field(None, description="License of the integration")
     manifest: Manifest = Field(..., description="Manifest of the integration")
-    logo: Optional[str] = Field(None, description="Logo of the integration")
+    logo: Optional[str] = Field(None, description="Logo of the integration", pattern=BASE64_IMAGE_REGEX)
 
 
 # Defines a function that takes in a JSON object and validates it

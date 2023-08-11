@@ -47,6 +47,8 @@ def main():
             except ValidationError as e:
                 logger.error(f"Validation failed for {filename}")
                 print(e)
+            finally:
+                logger.success(f"Validation passed for {filename}")
                 
 if __name__ == "__main__":
     main()
