@@ -12,3 +12,19 @@ poetry init
 # Create your manifest.json file and add it to the "manifests" folder
 poetry run reflex-integration-validator
 ```
+
+## Command Line Arguments
+
+```shell
+➜  poetry run reflex-integration-validator --help
+usage: reflex-integration-validator [-h] [--manifest MANIFEST] [--manifest-dir MANIFEST_DIR] [--recursive]
+
+Checks a manifest against the Integration schema
+
+options:
+  -h, --help            show this help message and exit
+  --manifest MANIFEST   The manifest file to load
+  --manifest-dir MANIFEST_DIR
+                        The directory to load the manifest from
+  --recursive           Recursively load manifests from the manifest directory
+```
