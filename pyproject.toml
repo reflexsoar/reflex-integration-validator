@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "reflex-integration-validator"
+version = "0.1.0"
+description = ""
+authors = ["Brian Carroll <brian@hasecuritysolutions.com>"]
+readme = "README.md"
+packages = [{include = "reflex_integration_validator"}]
+
+[tool.poetry.scripts]
+reflex-integration-validator = "reflex_integration_validator.main:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^2.1.1"
+loguru = "^0.7.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
