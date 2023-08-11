@@ -28,3 +28,7 @@ options:
                         The directory to load the manifest from
   --recursive           Recursively load manifests from the manifest directory
 ```
+
+## Demonstration
+
+![Demo](./demo.gif)
