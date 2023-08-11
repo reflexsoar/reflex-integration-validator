@@ -32,6 +32,7 @@ parser = argparse.ArgumentParser(description='Checks a manifest against the Inte
 parser.add_argument('--manifest', type=str, default='*.json', help='The manifest file to load')
 parser.add_argument('--manifest-dir', type=str, default='manifests', help='The directory to load the manifest from')
 parser.add_argument('--recursive', action='store_true', help='Recursively load manifests from the manifest directory')
+parser.add_argument('--stop-on-failure', action='store_true', help='Stop on the first failure')
 def main():
 
     args = parser.parse_args()
@@ -47,6 +48,9 @@ def main():
 
     for manifest in manifests:
         for filename, manifest_json in manifest.items():
+
+            passed = True
+
             logger.info(f"Validating {filename}")
 
             try:
@@ -54,9 +58,12 @@ def main():
             except ValidationError as e:
                 logger.error(f"Validation failed for {filename}")
                 print(e)
-                exit(1)
+                passed = False
+                if args.stop_on_failure:
+                    exit(1)
             
-            logger.success(f"Validation passed for {filename}")
+            if passed:
+                logger.success(f"Validation passed for {filename}")
                 
 if __name__ == "__main__":
     main()

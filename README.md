@@ -17,7 +17,7 @@ poetry run reflex-integration-validator
 
 ```shell
 ➜  poetry run reflex-integration-validator --help
-usage: reflex-integration-validator [-h] [--manifest MANIFEST] [--manifest-dir MANIFEST_DIR] [--recursive]
+usage: reflex-integration-validator [-h] [--manifest MANIFEST] [--manifest-dir MANIFEST_DIR] [--recursive] [--stop-on-failure]
 
 Checks a manifest against the Integration schema
 
@@ -27,6 +27,7 @@ options:
   --manifest-dir MANIFEST_DIR
                         The directory to load the manifest from
   --recursive           Recursively load manifests from the manifest directory
+  --stop-on-failure     Stop on the first failure
 ```
 
 ## Demonstration
