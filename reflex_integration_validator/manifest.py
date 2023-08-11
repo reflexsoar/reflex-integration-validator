@@ -84,7 +84,7 @@ class Integration(BaseModel):
     logo: Optional[str] = Field(None, description="Logo of the integration")
 
 
-# Defines a function that takes in a JSON object and validtes it
+# Defines a function that takes in a JSON object and validates it
 # against the Integration model
 def validate_integration(manifest: dict) -> Integration:
     return Integration(**manifest)
