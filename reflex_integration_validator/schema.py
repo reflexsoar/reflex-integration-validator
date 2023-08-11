@@ -13,6 +13,7 @@ class ConfigFieldTypes(str, Enum):
     STR = 'str'
     STR_SELECT = 'str-select'
     BOOL = 'bool'
+    STR_MULTIPLE = 'str-multiple'
 
 class ActionTypes(str, Enum):
     """ Defines the types of actions that can be used in an integration manifest. """
@@ -20,6 +21,7 @@ class ActionTypes(str, Enum):
     INVENTORY = 'inventory'
     ACTION = 'action'
     INPUT = 'input'
+    WEBHOOK = 'webhook'
 
 class ValidTriggers(str, Enum):
     """ Defines the valid triggers when running a scheduled action """
@@ -35,13 +37,13 @@ UUID4_REGEX = r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{
 AUTHOR_REGEX = r'^[a-zA-Z0-9 ]+<[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}>$'
 
 # Base64 encoded image regex
-BASE64_IMAGE_REGEX = r'^data:image\/(png|jpg|jpeg|gif);base64,[a-zA-Z0-9+/]+={0,2}$'
+BASE64_IMAGE_REGEX = r'^data:image\/(png|jpg|jpeg|gif|svg\+xml);base64,[a-zA-Z0-9+/]+={0,2}$'
 
 
 class ParameterField(BaseModel):
 
     type: ConfigFieldTypes = Field(..., description="Type of the parameter field")
-    required: bool = Field(..., description="Whether the parameter field is required")
+    required: Optional[bool] = Field(False, description="Whether the parameter field is required")
     default_options_from: Optional[str] = Field(None, description="Name of the configuration field to get default options from")
     observable_data_type: Optional[str] = Field(None, description="Observable data type of the parameter field")
     description: str = Field(..., description="Description of the parameter field")
@@ -49,7 +51,7 @@ class ParameterField(BaseModel):
 class ConfigurationField(BaseModel):
 
     type: str = Field(..., description="Type of the configuration field")
-    required: bool = Field(..., description="Whether the configuration field is required")
+    required: Optional[bool] = Field(False, description="Whether the configuration field is required")
     secret: Optional[bool] = Field(False, description="Whether the configuration field is a secret")
     default: Optional[Union[str,int,float]] = Field(None, description="Default value of the configuration field")
     description: str = Field(..., description="Description of the configuration field")

@@ -6,7 +6,7 @@ import json
 from loguru import logger
 from pydantic import ValidationError
 
-from reflex_integration_validator.manifest import validate_integration
+from reflex_integration_validator.schema import validate_integration
 
 def load_manifests(manifest_pattern, manifest_dir):
     """
@@ -47,8 +47,9 @@ def main():
             except ValidationError as e:
                 logger.error(f"Validation failed for {filename}")
                 print(e)
-            finally:
-                logger.success(f"Validation passed for {filename}")
+                exit(1)
+            
+            logger.success(f"Validation passed for {filename}")
                 
 if __name__ == "__main__":
     main()
