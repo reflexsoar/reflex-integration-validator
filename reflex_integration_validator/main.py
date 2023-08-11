@@ -8,7 +8,7 @@ from pydantic import ValidationError
 
 from reflex_integration_validator.schema import validate_integration
 
-def load_manifests(manifest_pattern, manifest_dir):
+def load_manifests(manifest_pattern, manifest_dir, recursive=False):
     """
     Loads the manifests from the manifest directory based on the glob pattern
     :param manifest_pattern: The glob pattern to match
@@ -16,15 +16,22 @@ def load_manifests(manifest_pattern, manifest_dir):
     :return: A list of manifests
     """
     manifests = []
-    for filename in glob.glob(os.path.join(manifest_dir, manifest_pattern)):
+
+    if recursive:
+        manifest_pattern = f"**/{manifest_pattern}"
+
+    for filename in glob.glob(os.path.join(manifest_dir, manifest_pattern), recursive=recursive):
         with open(filename) as f:
-            manifests.append({filename: json.load(f)})
+            manifest = json.load(f)
+            manifests.append({filename: manifest})
+   
     return manifests
 
 # Define arguments to load a specific manifest file from the manifests folder
 parser = argparse.ArgumentParser(description='Checks a manifest against the Integration schema')
 parser.add_argument('--manifest', type=str, default='*.json', help='The manifest file to load')
 parser.add_argument('--manifest-dir', type=str, default='manifests', help='The directory to load the manifest from')
+parser.add_argument('--recursive', action='store_true', help='Recursively load manifests from the manifest directory')
 def main():
 
     args = parser.parse_args()
@@ -35,8 +42,8 @@ def main():
         exit(1)
 
     # Load the manifests based on the glob pattern
-    logger.info(f"Loading manifests from {args.manifest_dir} with pattern {args.manifest}")
-    manifests = load_manifests(args.manifest, args.manifest_dir)
+    logger.info(f"Loading manifests from {args.manifest_dir} {'recursively' if args.recursive else ''}")
+    manifests = load_manifests(args.manifest, args.manifest_dir, args.recursive)
 
     for manifest in manifests:
         for filename, manifest_json in manifest.items():
