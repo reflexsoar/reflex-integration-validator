@@ -18,6 +18,14 @@ class ActionTypes(str, Enum):
 
     INVENTORY = 'inventory'
     ACTION = 'action'
+    INPUT = 'input'
+
+class ValidTriggers(str, Enum):
+    """ Defines the valid triggers when running a scheduled action """
+
+    MANUAL = 'manual'
+    SCHEDULE = 'schedule'
+    EVENT_RULE = 'event_rule'
 
 UUID4_REGEX = r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}'
 VALID_CONFIG_FIELD_TYPES = ['int', 'str', 'str-select', 'bool']
@@ -34,7 +42,7 @@ class ConfigurationField(BaseModel):
 
     type: str = Field(..., description="Type of the configuration field")
     required: bool = Field(..., description="Whether the configuration field is required")
-    secret: bool = Field(..., description="Whether the configuration field is a secret")
+    secret: Optional[bool] = Field(False, description="Whether the configuration field is a secret")
     default: Optional[Union[str,int,float]] = Field(None, description="Default value of the configuration field")
     description: str = Field(..., description="Description of the configuration field")
     options: List[str] = Field([], description="Options for the configuration field")
@@ -47,8 +55,9 @@ class Action(BaseModel):
     description: str = Field(..., description="Description of the action")
     type: ActionTypes = Field(..., description="Type of the action")
     run_from: Literal['console','agent'] = Field(..., description="Where the action is run from")
-    configuration: Dict[str, ConfigurationField] = Field(..., description="Configuration fields for the action")
-    parameters: Dict[str, ParameterField] = Field(..., description="Parameters for the action")
+    configuration: Optional[Dict[str, ConfigurationField]] = Field(None, description="Configuration fields for the action")
+    parameters: Optional[Dict[str, ParameterField]] = Field(None, description="Parameters for the action")
+    trigger: Optional[List[ValidTriggers]] = Field([], description="Trigger for the action")
 
 
 class Manifest(BaseModel):
