@@ -3,7 +3,7 @@ manifests against a standard schema."""
 
 import re
 from enum import Enum
-from typing import Optional, Union, List, Dict, Literal
+from typing import Optional, Union, List, Dict, Literal, Any
 from pydantic import BaseModel, Field
 
 class ConfigFieldTypes(str, Enum):
@@ -43,6 +43,7 @@ BASE64_IMAGE_REGEX = r'^data:image\/(png|jpg|jpeg|gif|svg\+xml);base64,[a-zA-Z0-
 class ParameterField(BaseModel):
 
     type: ConfigFieldTypes = Field(..., description="Type of the parameter field")
+    label: str = Field(..., description="Label of the parameter field")
     required: Optional[bool] = Field(False, description="Whether the parameter field is required")
     default_options_from: Optional[str] = Field(None, description="Name of the configuration field to get default options from")
     observable_data_type: Optional[str] = Field(None, description="Observable data type of the parameter field")
@@ -51,9 +52,10 @@ class ParameterField(BaseModel):
 class ConfigurationField(BaseModel):
 
     type: str = Field(..., description="Type of the configuration field")
+    label: str = Field(..., description="Label of the configuration field")
     required: Optional[bool] = Field(False, description="Whether the configuration field is required")
     secret: Optional[bool] = Field(False, description="Whether the configuration field is a secret")
-    default: Optional[Union[str,int,float]] = Field(None, description="Default value of the configuration field")
+    default: Optional[Any] = Field(None, description="Default value of the configuration field")
     description: str = Field(..., description="Description of the configuration field")
     options: List[str] = Field([], description="Options for the configuration field")
 
