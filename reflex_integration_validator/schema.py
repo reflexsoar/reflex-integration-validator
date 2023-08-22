@@ -40,6 +40,13 @@ AUTHOR_REGEX = r'^[a-zA-Z0-9 ]+<[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}>$
 BASE64_IMAGE_REGEX = r'^data:image\/(png|jpg|jpeg|gif|svg\+xml);base64,[a-zA-Z0-9+/]+={0,2}$'
 
 
+class FieldCondition(BaseModel):
+
+    field: str = Field(..., description="Field to check")
+    operator: Literal['eq','ne','gt','gte','lt','lte', 'contains', 'startswith', 'endswith'] = Field(..., description="Operator to use")
+    value: Union[str, int, bool] = Field(..., description="Value to check against")
+
+
 class ParameterField(BaseModel):
 
     type: ConfigFieldTypes = Field(..., description="Type of the parameter field")
@@ -48,6 +55,8 @@ class ParameterField(BaseModel):
     default_options_from: Optional[str] = Field(None, description="Name of the configuration field to get default options from")
     observable_data_type: Optional[str] = Field(None, description="Observable data type of the parameter field")
     description: str = Field(..., description="Description of the parameter field")
+    options: Optional[List[Dict[str, str]]] = Field(None, description="Options for the configuration field")
+    conditions: Optional[List[FieldCondition]] = Field(None, description="Conditions for the parameter field")
 
 class ConfigurationField(BaseModel):
 
@@ -57,7 +66,8 @@ class ConfigurationField(BaseModel):
     secret: Optional[bool] = Field(False, description="Whether the configuration field is a secret")
     default: Optional[Any] = Field(None, description="Default value of the configuration field")
     description: str = Field(..., description="Description of the configuration field")
-    options: List[str] = Field([], description="Options for the configuration field")
+    options: List[Dict[str, str]] = Field([], description="Options for the configuration field")
+    conditions: Optional[List[FieldCondition]] = Field(None, description="Conditions for the parameter field")
 
 
 class Action(BaseModel):
