@@ -22,6 +22,8 @@ class ActionTypes(str, Enum):
     ACTION = 'action'
     INPUT = 'input'
     WEBHOOK = 'webhook'
+    INTEL = 'intel'
+    OUTPUT = 'output'
 
 class ValidTriggers(str, Enum):
     """ Defines the valid triggers when running a scheduled action """
