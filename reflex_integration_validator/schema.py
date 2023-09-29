@@ -31,6 +31,7 @@ class ValidTriggers(str, Enum):
     MANUAL = 'manual'
     SCHEDULE = 'schedule'
     EVENT_RULE = 'event_rule'
+    NONE = 'system'
 
 # A normal UUID4 regex
 UUID4_REGEX = r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}'
@@ -81,7 +82,7 @@ class Action(BaseModel):
     run_from: Literal['console','agent'] = Field(..., description="Where the action is run from")
     configuration: Optional[Dict[str, ConfigurationField]] = Field(None, description="Configuration fields for the action")
     parameters: Optional[Dict[str, ParameterField]] = Field(None, description="Parameters for the action")
-    trigger: Optional[List[ValidTriggers]] = Field([], description="Trigger for the action")
+    trigger: List[ValidTriggers] = Field(description="Trigger for the action")
 
 
 class Manifest(BaseModel):
