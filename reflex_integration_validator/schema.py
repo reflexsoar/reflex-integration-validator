@@ -33,6 +33,15 @@ class ValidTriggers(str, Enum):
     EVENT_RULE = 'event_rule'
     NONE = 'system'
 
+class SourceObjectType(str, Enum):
+    """ Defines the valid source object types for an action """
+    
+    EVENT = 'event'
+    CASE = 'case'
+    OBSERVABLE = 'observable'
+    ASSET = 'asset'
+    FILE = 'file'
+
 # A normal UUID4 regex
 UUID4_REGEX = r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}'
 
@@ -56,7 +65,7 @@ class ParameterField(BaseModel):
     label: str = Field(..., description="Label of the parameter field")
     required: Optional[bool] = Field(False, description="Whether the parameter field is required")
     default_options_from: Optional[str] = Field(None, description="Name of the configuration field to get default options from")
-    observable_data_type: Optional[str] = Field(None, description="Observable data type of the parameter field")
+    observable_data_type: Optional[Union[List[str], str]] = Field(None, description="Observable data type of the parameter field")
     description: str = Field(..., description="Description of the parameter field")
     options: Optional[List[Dict[str, str]]] = Field(None, description="Options for the configuration field")
     conditions: Optional[List[FieldCondition]] = Field(None, description="Conditions for the parameter field")
@@ -83,6 +92,8 @@ class Action(BaseModel):
     configuration: Optional[Dict[str, ConfigurationField]] = Field(None, description="Configuration fields for the action")
     parameters: Optional[Dict[str, ParameterField]] = Field(None, description="Parameters for the action")
     trigger: List[ValidTriggers] = Field(description="Trigger for the action")
+    tags: Optional[List[str]] = Field(None, description="Tags for the action")
+    source_object_type: Optional[Union[List[SourceObjectType], SourceObjectType]] = Field(None, description="Source object type for the action")
 
 
 class Manifest(BaseModel):
