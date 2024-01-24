@@ -50,6 +50,7 @@ AUTHOR_REGEX = r'^[a-zA-Z0-9 ]+<[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}>$
 
 # Base64 encoded image regex
 BASE64_IMAGE_REGEX = r'^data:image\/(png|jpg|jpeg|gif|svg\+xml);base64,[a-zA-Z0-9+/]+={0,2}$'
+URL_REGEX = r'^https?:\/\/[^\s]+$'
 
 
 class FieldCondition(BaseModel):
@@ -80,6 +81,9 @@ class ConfigurationField(BaseModel):
     description: str = Field(..., description="Description of the configuration field")
     options: List[Dict[str, str]] = Field([], description="Options for the configuration field")
     conditions: Optional[List[FieldCondition]] = Field(None, description="Conditions for the parameter field")
+    rows: Optional[int] = Field(None, description="Number of rows for the configuration field")
+    min: Optional[int] = Field(None, description="Minimum value for the configuration field")
+    max: Optional[int] = Field(None, description="Maximum value for the configuration field")
 
 
 class Action(BaseModel):
@@ -117,7 +121,7 @@ class Integration(BaseModel):
     enabled: bool = Field(True, description="Whether the integration is enabled")
     license: Optional[str] = Field(None, description="License of the integration")
     manifest: Manifest = Field(..., description="Manifest of the integration")
-    logo: Optional[str] = Field(None, description="Logo of the integration", pattern=BASE64_IMAGE_REGEX)
+    logo: Optional[str] = Field(None, description="Logo of the integration", pattern=f"{BASE64_IMAGE_REGEX}|{URL_REGEX}")
 
 
 # Defines a function that takes in a JSON object and validates it
